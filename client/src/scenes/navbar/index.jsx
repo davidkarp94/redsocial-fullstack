@@ -40,8 +40,10 @@ const Navbar = () => {
     const primaryLight = theme.palette.primary.light;
     const alt = theme.palette.background.alt;
 
-    const fullName = `Roberto Gomez Bolaños`;
-    // const fullName = `${user.firstName} ${user.lastName}`;
+    const fullName = `${user.firstName} ${user.lastName}`;
+
+    console.log(user)
+
 
     return (
         <FlexBetween padding='1rem 6%' backgroundColor={alt}>
@@ -54,7 +56,7 @@ const Navbar = () => {
                 sx={{
                     '&:hover': {
                         color: primaryLight,
-                        cursos: 'pointer',
+                        cursor: 'pointer',
                     }
                 }}
                 >
@@ -88,8 +90,8 @@ const Navbar = () => {
                         value={ fullName }
                         sx={{ 
                             backgroundColor: neutralLight,
-                            width: '150px',
                             borderRadius: '0.25rem',
+                            maxWidth: '400px',
                             p: '0.25rem 1rem',
                             '& .MuiSvgIcon-root': {
                                 pr: '0.25rem',
@@ -159,7 +161,7 @@ const Navbar = () => {
                             value={ fullName }
                             sx={{ 
                                 backgroundColor: neutralLight,
-                                width: '150px',
+                                maxWidth: '400px',
                                 borderRadius: '0.25rem',
                                 p: '0.25rem 1rem',
                                 '& .MuiSvgIcon-root': {
