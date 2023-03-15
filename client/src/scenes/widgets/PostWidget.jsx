@@ -60,7 +60,7 @@ const PostWidget = ({
     const dateParsed = parseISO(date);
     const formatedDate = format(dateParsed, "MMM d',' yyyy' - 'HH:mm'hs.");
     setDatePosted(formatedDate)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <WidgetWrapper m='2rem 0'>

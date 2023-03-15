@@ -54,7 +54,7 @@ const MyPostWidget = ({ picturePath, profileId= null }) => {
       body: formData,
     });
     const posts = await response.json();
-    if (_id === profileId) {
+    if (_id === profileId || profileId === null) {
       dispatch(setPosts({ posts }));
     }
     setImage(null);

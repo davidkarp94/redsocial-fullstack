@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     IconButton,
@@ -33,17 +33,31 @@ const Navbar = () => {
     const user = useSelector((state) => state.user);
     const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
     const theme = useTheme();
+    const [userList, setUserList] = useState([]);
+    const token = useSelector((state) => state.token);
 
     const neutralLight = theme.palette.neutral.light;
     const dark = theme.palette.neutral.dark;
-    const background = theme.palette.background.default;
+    const background = theme.palette.background.blur;
     const primaryLight = theme.palette.primary.light;
     const alt = theme.palette.background.alt;
 
     const fullName = `${user.firstName} ${user.lastName}`;
 
-    console.log(user)
+    const getUsers = async () => {
+        const response = await fetch(`http://localhost:3001/users`, {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        const data = await response.json();
+        setUserList(data);
+    }
 
+    useEffect(() => {
+        getUsers();
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    console.log(userList);
 
     return (
         <FlexBetween padding='1rem 6%' backgroundColor={alt}>
@@ -60,15 +74,25 @@ const Navbar = () => {
                     }
                 }}
                 >
-                    PupupuDiner
+                    VixBook
                 </Typography>
                 {isNonMobileScreens && (
+                    <Box sx={{ position:'relative' }}>
                     <FlexBetween backgroundColor={ neutralLight } borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
                         <InputBase placeholder='Search...' />
                         <IconButton>
                             <Search />
                         </IconButton>
                     </FlexBetween>
+                    <FlexBetween zIndex='3' backgroundColor={ neutralLight } width='100%' borderRadius='0 0 9px 9px' gap='3rem' padding='1.5rem 1.5rem'
+                     sx={{ position:'absolute' }}>
+                        <Box display='flex' flexDirection='column' gap='1.5rem'>
+                            {userList.map((user, key) => (
+                                    <Typography key={ key }>{user.firstName}</Typography>
+                            ))}
+                        </Box>
+                    </FlexBetween>
+                    </Box>
                 )}
             </FlexBetween>
             
@@ -129,7 +153,8 @@ const Navbar = () => {
                 zIndex='10'
                 maxWidth='500px'
                 minWidth='300px'
-                backgroundColor={ background }
+                backgroundColor= { background }
+                sx={{ backdropFilter:'blur(8px)' }}
                 >
                     {/* CLOSE ICON */}
                     <Box

@@ -47,8 +47,11 @@ const UserWidget = ({ userId, picturePath }) => {
     occupation,
     viewedProfile,
     impressions,
-    friends
+    friends,
+    email
   } = user;
+
+  console.log(user)
 
   return (
     <WidgetWrapper>
@@ -104,10 +107,22 @@ const UserWidget = ({ userId, picturePath }) => {
             display='flex'
             alignItems='center'
             gap='1rem'
+            mb='0.5rem'
             >
               <WorkOutlineOutlined fontSize='large' sx={{ color: main }} />
               <Typography color={ medium }>
                 { occupation }
+              </Typography>
+            </Box>
+
+            <Box
+            display='flex'
+            alignItems='center'
+            gap='1rem'
+            >
+              <MailOutlineSharp fontSize='large' sx={{ color: main }} />
+              <Typography color={ medium }>
+                { email }
               </Typography>
             </Box>
         </Box>

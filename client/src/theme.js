@@ -3,6 +3,7 @@ export const colorTokens = {
     0: '#FFFFFF',
     10: '#F6F6F6',
     50: '#F0F0F0',
+    75: 'rgba(0,0,0,0.2)',
     100: '#E0E0E0',
     200: '#C2C2C2',
     300: '#A3A3A3',
@@ -13,6 +14,7 @@ export const colorTokens = {
     800: '#1A1A1A',
     900: '#0A0A0A',
     1000: '#000000',
+    1100: 'rgba(255,255,255,0.2)'
     },
     primary: {
         50: '#E6FBFF',
@@ -50,6 +52,7 @@ export const themeSetting = (mode) => {
                 },
                 background: {
                     default: colorTokens.grey[900],
+                    blur: colorTokens.grey[1100],
                     alt: colorTokens.grey[800]
                 }
             } : {
@@ -68,6 +71,7 @@ export const themeSetting = (mode) => {
                 },
                 background: {
                     default: colorTokens.grey[50],
+                    blur: colorTokens.grey[75],
                     alt: colorTokens.grey[0]
                 }
             }
