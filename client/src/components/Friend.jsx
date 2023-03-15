@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFriends } from 'state';
+import { setFriends, setPosts } from 'state';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, postId }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,6 +43,18 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     const data = await response.json();
     dispatch(setFriends({ friends: data }))
   };
+
+  const handleRemovePost = async() => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const posts = await response.json();
+    dispatch(setPosts({ posts }));
+  }
 
   return (
     <FlexBetween>
@@ -75,7 +87,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           </Typography>
         </Box>
       </FlexBetween>
-      {friendId !== loggedInUserId && (
+      {friendId !== loggedInUserId ? (
         <IconButton
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
@@ -86,6 +98,12 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             <PersonAddOutlined sx={{ color: primaryDark }} />
           )}
         </IconButton>
+      ) : (
+        <p
+        onClick={() => handleRemovePost()}
+        >
+          x
+        </p>
       )}
     </FlexBetween>
   )
