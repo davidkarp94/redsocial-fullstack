@@ -14,9 +14,10 @@ import {
 import FlexBetween from "components/FlexBetween";
 import Friend from 'components/Friend';
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import { format, parseISO } from 'date-fns';
 
 const PostWidget = ({
   postId,
@@ -27,7 +28,8 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
-  comments
+  comments,
+  date
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch();
@@ -35,6 +37,7 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
+  const [datePosted, setDatePosted] = useState('');
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -53,6 +56,12 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  useEffect(() => {
+    const dateParsed = parseISO(date);
+    const formatedDate = format(dateParsed, "MMM d',' yyyy' - 'HH:mm'hs.");
+    setDatePosted(formatedDate)
+  }, [])
+
   return (
     <WidgetWrapper m='2rem 0'>
       <Friend
@@ -61,6 +70,7 @@ const PostWidget = ({
       name={name}
       subtitle={location}
       userPicturePath={userPicturePath}
+      date={datePosted}
     />
       <Typography color={main} sx={{ mt:'1rem' }}>
         {description}

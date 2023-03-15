@@ -159,7 +159,7 @@ const UserWidget = ({ userId, picturePath }) => {
                 <Typography color={ main } fontWeight='500'>
                   LinkedIn
                 </Typography>
-                <Typography color={ medium }>Network PLatform</Typography>
+                <Typography color={ medium }>Network Platform</Typography>
               </Box>
             </FlexBetween>
             <EditOutlined sx={{ color: main }} />

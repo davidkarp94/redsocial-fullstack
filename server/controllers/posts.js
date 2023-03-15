@@ -5,6 +5,7 @@ import User from '../models/User.js';
 export const createPost = async (req, res) => {
     try {
         const { userId, description, picturePath } = req.body;
+        const { profileId } = req.params;
         const user = await User.findById(userId);
         const newPost = new Post({
             userId,
@@ -18,7 +19,7 @@ export const createPost = async (req, res) => {
             comments: []
         });
         await newPost.save();
-
+        
         const post = await Post.find().sort({ createdAt: -1 });
 
         res.status(201).json(post);

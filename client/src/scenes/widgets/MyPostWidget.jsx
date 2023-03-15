@@ -25,7 +25,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ picturePath, profileId= null }) => {
 
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
@@ -42,6 +42,7 @@ const MyPostWidget = ({ picturePath }) => {
     const formData = new FormData();
     formData.append('userId', _id);
     formData.append('description', post);
+    formData.append('profileId', profileId);
     if (image) {
       formData.append('picture', image);
       formData.append('picturePath', image.name);
@@ -53,10 +54,15 @@ const MyPostWidget = ({ picturePath }) => {
       body: formData,
     });
     const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    if (_id === profileId) {
+      dispatch(setPosts({ posts }));
+    }
     setImage(null);
     setPost('');
   };
+
+  console.log(`user: ${_id}`)
+  console.log(`post id: ${profileId}`)
 
   return (
     <WidgetWrapper>

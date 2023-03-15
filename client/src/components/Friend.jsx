@@ -1,6 +1,7 @@
 import {
   PersonAddOutlined,
-  PersonRemoveOutlined
+  PersonRemoveOutlined,
+  ClearOutlined
 } from '@mui/icons-material';
 import {
   Box,
@@ -14,7 +15,7 @@ import { setFriends, setPosts } from 'state';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, postId }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,6 +86,12 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId }) => {
           >
             {subtitle}
           </Typography>
+          <Typography
+          color={medium}
+          fontSize='0.75rem'
+          >
+            {date}
+          </Typography>
         </Box>
       </FlexBetween>
       {friendId !== loggedInUserId ? (
@@ -99,11 +106,12 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId }) => {
           )}
         </IconButton>
       ) : (
-        <p
-        onClick={() => handleRemovePost()}
-        >
-          x
-        </p>
+        <IconButton>
+          <ClearOutlined
+          onClick={() => handleRemovePost()}
+          cursor='pointer'
+          />
+        </IconButton>
       )}
     </FlexBetween>
   )
