@@ -22,7 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMode, setLogout } from 'state';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import FlexBetween from 'components/FlexBetween';
 import UserImage from 'components/UserImage';
 
@@ -42,8 +42,38 @@ const Navbar = () => {
     const background = theme.palette.background.blur;
     const primaryLight = theme.palette.primary.light;
     const alt = theme.palette.background.alt;
+    const main = theme.palette.neutral.main;
 
     const fullName = `${user.firstName} ${user.lastName}`;
+
+    const [query, setQuery] = useState("");
+    const location = useLocation();
+    const [focusSearchBar, setFocusSearchBar] = useState(false);
+
+    function clearInput() {
+        setQuery("");
+    }
+
+    useEffect(() => {
+        clearInput()
+    }, [location])
+
+    function handleFocusSearchBar(state) {
+
+        {
+            state ?
+                setFocusSearchBar(state)
+                :
+                setTimeout(() => {
+                    setFocusSearchBar(state);
+                }, 100)
+        }
+    }
+
+    const searchUsers = userList => {
+        return (userList.filter(user => user.firstName.toLowerCase().includes(query.toLowerCase()) || user.lastName.toLowerCase().includes(query.toLowerCase())))
+        // return (data[1].filter(user => user.collection_name.toLowerCase().includes(query.toLowerCase())))
+    }
 
     const getUsers = async () => {
         const response = await fetch(`http://localhost:3001/users`, {
@@ -58,8 +88,18 @@ const Navbar = () => {
         getUsers();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    console.log(userList);
+    function isHomePage() {
+        return window.location.pathname === '/home';
+    }
 
+    function handleRefresh() {
+        if (!isHomePage()) {
+            setTimeout(() => {
+                window.location.reload();
+              }, 5);
+        }
+    }
+    
     return (
         <FlexBetween padding='1rem 6%' backgroundColor={alt}>
             <FlexBetween gap='1.75rem'>
@@ -80,25 +120,49 @@ const Navbar = () => {
                 {isNonMobileScreens && (
                     <Box sx={{ position:'relative' }}>
                     <FlexBetween backgroundColor={ neutralLight } border={`1px solid ${background}`} borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
-                        <InputBase placeholder='Search...' />
+                        <InputBase 
+                        placeholder='Search...'
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={() => handleFocusSearchBar(true)}
+                        onBlur={() => handleFocusSearchBar(false)}
+                        />
                         <IconButton>
                             <Search />
                         </IconButton>
                     </FlexBetween>
-                    <FlexBetween zIndex='3' backgroundColor={ neutralLight } width='100%' border={`1px solid ${background}`} borderTop='none' borderRadius='0 0 9px 9px' gap='3rem' padding='1.5rem 1.5rem'
-                     sx={{ position:'absolute', top:'36px' }}>
-                        <Box display='flex' flexDirection='column' gap='1.5rem' width='100%'>
-                            {userList.map((user, key) => (
-                                    <FlexBetween key={ key }>
-                                        <UserImage image={ user.picturePath } />
-                                        <Box>
-                                            <Typography textAlign='right'>{user.firstName}</Typography>
-                                            <Typography textAlign='right'>{user.lastName}</Typography>
-                                        </Box>
-                                    </FlexBetween>
+                    {(query !== "" && focusSearchBar) && 
+                        <FlexBetween zIndex='3' width='100%' border={`1px solid ${background}`} borderTop='none' borderRadius='0 0 9px 9px' gap='3rem' backgroundColor={ neutralLight }
+                        sx={{ position:'absolute', top:'36px' }}>
+                        <Box display='flex' flexDirection='column' width='100%'>
+                            {searchUsers(userList).map((user, key) => (
+                                    <Link key={ key } to={`/profile/${user._id}`} onClick={() => handleRefresh()} style={{ textDecoration:'none' }}>
+                                        <FlexBetween sx={{ cursor:'pointer', '&:hover': { backgroundColor:`${background}` } }}p='1rem 1.5rem' borderRadius='10px'>
+                                            <UserImage image={ user.picturePath } />
+                                            <Box>
+                                                <Typography
+                                                color={main}
+                                                variant='h5'
+                                                fontWeight='500'
+                                                textAlign='right'
+                                                >
+                                                    {user.firstName}
+                                                </Typography>
+                                                <Typography
+                                                textAlign='right'
+                                                color={main}
+                                                variant='h5'
+                                                fontWeight='500'
+                                                >
+                                                    {user.lastName}
+                                                </Typography>
+                                            </Box>
+                                        </FlexBetween>
+                                    </Link>
                             ))}
                         </Box>
-                    </FlexBetween>
+                        </FlexBetween>
+                    }
                     </Box>
                 )}
             </FlexBetween>

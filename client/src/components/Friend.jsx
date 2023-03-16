@@ -15,7 +15,7 @@ import { setFriends, setPosts } from 'state';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, friendList=false }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date }) => 
           </Typography>
         </Box>
       </FlexBetween>
-      {friendId !== loggedInUserId ? (
+      {(friendId !== loggedInUserId || friendList) ? (
         <IconButton
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
