@@ -51,8 +51,6 @@ const UserWidget = ({ userId, picturePath }) => {
     email
   } = user;
 
-  console.log(user)
-
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}

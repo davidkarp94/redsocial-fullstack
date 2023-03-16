@@ -61,9 +61,6 @@ const MyPostWidget = ({ picturePath, profileId= null }) => {
     setPost('');
   };
 
-  console.log(`user: ${_id}`)
-  console.log(`post id: ${profileId}`)
-
   return (
     <WidgetWrapper>
       <FlexBetween gap='1.5rem'>

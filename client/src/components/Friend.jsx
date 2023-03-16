@@ -9,6 +9,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setFriends, setPosts } from 'state';
@@ -31,6 +32,16 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
   const medium = palette.neutral.medium;
 
   const isFriend = friends.find((friend) => friend._id === friendId);
+  const isFriendMine = friends.find((friend) => friend._id === loggedInUserId);
+  const [friendProfile, setFriendProfile] = useState(false);
+
+  function whereAmI() {
+    return window.location.pathname !== '/home';
+}
+
+  useEffect(() => {
+    setFriendProfile(whereAmI());
+  }, [])
 
   const patchFriend = async () => {
     const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`,
@@ -41,8 +52,10 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
         'Content-Type': 'application/json'
       }
     });
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }))
+    if (!friendProfile) {
+      const data = await response.json();
+      dispatch(setFriends({ friends: data }))
+    }
   };
 
   const handleRemovePost = async() => {
@@ -94,15 +107,24 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
           </Typography>
         </Box>
       </FlexBetween>
-      {(friendId !== loggedInUserId || friendList) ? (
+      {loggedInUserId === friendId || friendProfile ? null
+      : ((friendId !== loggedInUserId || friendList) ? (
         <IconButton
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
         >
-          {isFriend ? (
-            <PersonRemoveOutlined sx={{ color: primaryDark }} />
+          {friendProfile ? (
+              isFriendMine ? (
+                <PersonRemoveOutlined sx={{ color: primaryDark }} />
+              ) : (
+                <PersonAddOutlined sx={{ color: primaryDark }} />
+              )
           ) : (
-            <PersonAddOutlined sx={{ color: primaryDark }} />
+            isFriend ? (
+              <PersonRemoveOutlined sx={{ color: primaryDark }} />
+            ) : (
+              <PersonAddOutlined sx={{ color: primaryDark }} />
+            )
           )}
         </IconButton>
       ) : (
@@ -112,7 +134,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
           cursor='pointer'
           />
         </IconButton>
-      )}
+      ))}
     </FlexBetween>
   )
 }
