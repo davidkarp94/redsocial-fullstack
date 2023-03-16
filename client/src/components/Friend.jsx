@@ -36,7 +36,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
   const [friendProfile, setFriendProfile] = useState(false);
 
   function whereAmI() {
-    return window.location.pathname !== '/home';
+    return (window.location.pathname !== '/home' && window.location.pathname !== `/profile/${loggedInUserId}`);
 }
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
           </Typography>
         </Box>
       </FlexBetween>
-      {loggedInUserId === friendId || friendProfile ? null
+      {friendProfile ? null
       : ((friendId !== loggedInUserId || friendList) ? (
         <IconButton
         onClick={() => patchFriend()}
