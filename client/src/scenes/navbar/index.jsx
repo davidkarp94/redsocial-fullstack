@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMode, setLogout } from 'state';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from 'components/FlexBetween';
+import UserImage from 'components/UserImage';
 
 const Navbar = () => {
 
@@ -78,17 +79,23 @@ const Navbar = () => {
                 </Typography>
                 {isNonMobileScreens && (
                     <Box sx={{ position:'relative' }}>
-                    <FlexBetween backgroundColor={ neutralLight } borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
+                    <FlexBetween backgroundColor={ neutralLight } border={`1px solid ${background}`} borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
                         <InputBase placeholder='Search...' />
                         <IconButton>
                             <Search />
                         </IconButton>
                     </FlexBetween>
-                    <FlexBetween zIndex='3' backgroundColor={ neutralLight } width='100%' borderRadius='0 0 9px 9px' gap='3rem' padding='1.5rem 1.5rem'
-                     sx={{ position:'absolute' }}>
-                        <Box display='flex' flexDirection='column' gap='1.5rem'>
+                    <FlexBetween zIndex='3' backgroundColor={ neutralLight } width='100%' border={`1px solid ${background}`} borderTop='none' borderRadius='0 0 9px 9px' gap='3rem' padding='1.5rem 1.5rem'
+                     sx={{ position:'absolute', top:'36px' }}>
+                        <Box display='flex' flexDirection='column' gap='1.5rem' width='100%'>
                             {userList.map((user, key) => (
-                                    <Typography key={ key }>{user.firstName}</Typography>
+                                    <FlexBetween key={ key }>
+                                        <UserImage image={ user.picturePath } />
+                                        <Box>
+                                            <Typography textAlign='right'>{user.firstName}</Typography>
+                                            <Typography textAlign='right'>{user.lastName}</Typography>
+                                        </Box>
+                                    </FlexBetween>
                             ))}
                         </Box>
                     </FlexBetween>
