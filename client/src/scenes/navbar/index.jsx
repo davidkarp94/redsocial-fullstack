@@ -76,7 +76,7 @@ const Navbar = () => {
     }
 
     const getUsers = async () => {
-        const response = await fetch(`http://localhost:3001/users`, {
+        const response = await fetch(`https://vixbook-backend.onrender.com/users`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` }
         })

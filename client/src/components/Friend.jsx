@@ -44,7 +44,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
   }, [])
 
   const patchFriend = async () => {
-    const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`,
+    const response = await fetch(`https://vixbook-backend.onrender.com/users/${_id}/${friendId}`,
     {
       method: 'PATCH',
       headers: {
@@ -59,7 +59,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, postId, date, frien
   };
 
   const handleRemovePost = async() => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
+    const response = await fetch(`https://vixbook-backend.onrender.com/posts/${postId}/delete`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
