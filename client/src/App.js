@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { themeSetting } from './theme';
-import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 function App() {
   const mode = useSelector((state) => state.mode);
