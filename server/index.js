@@ -51,6 +51,7 @@ conn.once('open', () => {
 
 const storage = new GridFsStorage({
     url: process.env.MONGO_URL,
+    root: path.join(__dirname, 'image'),
     options: { useNewUrlParser: true, useUnifiedTopology: true },
     file: (req, file) => {
         return { filename: file.originalname, bucketName: 'fs' };
@@ -58,6 +59,20 @@ const storage = new GridFsStorage({
 });
 
 const upload = multer({ storage });
+
+app.get('/image/:id', (req, res) => {
+    const imageId = req.params.id;
+    gfs
+      .find({ _id: mongoose.Types.ObjectId(imageId) })
+      .toArray((err, files) => {
+        if (!files || files.length === 0) {
+          return res.status(404).json({
+            message: 'No se encontró la imagen'
+          });
+        }
+        gfs.openDownloadStream(mongoose.Types.ObjectId(imageId)).pipe(res);
+      });
+  });
 
 /* ROUTES WITH FILES */
 app.post('/auth/register', upload.single('picture'), register);
