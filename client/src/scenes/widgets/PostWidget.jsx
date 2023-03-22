@@ -38,10 +38,15 @@ const PostWidget = ({
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
   const [datePosted, setDatePosted] = useState('');
+  const [src, setSrc] = useState(`https://vixbook-backend.onrender.com/assets/${picturePath}`);
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+
+  const onError = () => {
+    setSrc('https://vixbook-backend.onrender.com/assets/defaultpost.png');
+  }
 
   const patchLike = async () => {
     const response = await fetch(`https://vixbook-backend.onrender.com/posts/${postId}/like`, {
@@ -81,7 +86,8 @@ const PostWidget = ({
         height='auto'
         alt='post'
         style={{ borderRadius:'0.75rem', marginTop:'0.75rem' }}
-        src={`https://vixbook-backend.onrender.com/assets/${picturePath}`}
+        src={src}
+        onError={onError}
         />
       )}
       <FlexBetween mt='0.25rem'>

@@ -1,6 +1,13 @@
 import { Box } from '@mui/material';
+import { useState } from 'react';
 
 const UserImage = ({ image, size='60px' }) => {
+
+  const [src, setSrc] = useState(`https://vixbook-backend.onrender.com/assets/${image}`);
+
+  const onError = () => {
+    setSrc('https://vixbook-backend.onrender.com/assets/defaultuser.jpg')
+  }
 
   return (
     <Box
@@ -12,7 +19,8 @@ const UserImage = ({ image, size='60px' }) => {
       width={ size }
       height={ size }
       alt='user'
-      src={`https://vixbook-backend.onrender.com/assets/${image}`}
+      src={src}
+      onError={onError}
       />
     </Box>
   )
