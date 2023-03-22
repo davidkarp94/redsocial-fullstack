@@ -18,7 +18,7 @@ import User from './models/User.js';
 import Post from './models/Post.js';
 import { users, posts } from './data/index.js';
 import Grid from 'gridfs-stream';
-import GridFsStorage from 'multer-gridfs-storage';
+import { GridFsStorage } from 'multer-gridfs-storage';
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
