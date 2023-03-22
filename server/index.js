@@ -17,6 +17,8 @@ import { verifyToken } from './middleware/auth.js';
 import User from './models/User.js';
 import Post from './models/Post.js';
 import { users, posts } from './data/index.js';
+import Grid from 'gridfs-stream';
+import GridFsStorage from 'multer-gridfs-storage';
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -33,12 +35,25 @@ app.use(cors());
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'public/assets');
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname);
+const conn = mongoose.createConnection(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+let gfs;
+conn.once('open', () => {
+    gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: 'fs',
+        chunkSizeBytes: 1024 * 1024,
+        filename: 'filename'
+    });
+});
+
+const storage = new GridFsStorage({
+    url: process.env.MONGO_URL,
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
+    file: (req, file) => {
+        return { filename: file.originalname, bucketName: 'fs' };
     }
 });
 
