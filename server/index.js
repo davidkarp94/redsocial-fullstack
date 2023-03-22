@@ -60,7 +60,7 @@ const storage = new GridFsStorage({
 
 const upload = multer({ storage });
 
-app.get('/image/:id', (req, res) => {
+app.get('/assets/:id', (req, res) => {
     const imageId = req.params.id;
     gfs
       .find({ _id: mongoose.Types.ObjectId(imageId) })
@@ -73,6 +73,8 @@ app.get('/image/:id', (req, res) => {
         gfs.openDownloadStream(mongoose.Types.ObjectId(imageId)).pipe(res);
       });
   });
+
+  export default app;
 
 /* ROUTES WITH FILES */
 app.post('/auth/register', upload.single('picture'), register);
