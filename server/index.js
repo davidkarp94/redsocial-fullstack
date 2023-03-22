@@ -17,8 +17,6 @@ import { verifyToken } from './middleware/auth.js';
 import User from './models/User.js';
 import Post from './models/Post.js';
 import { users, posts } from './data/index.js';
-import Grid from 'gridfs-stream';
-import { GridFsStorage } from 'multer-gridfs-storage';
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -35,46 +33,16 @@ app.use(cors());
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 /* FILE STORAGE */
-const conn = mongoose.createConnection(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-let gfs;
-conn.once('open', () => {
-    gfs = new mongoose.mongo.GridFSBucket(conn.db, {
-        bucketName: 'fs',
-        chunkSizeBytes: 1024 * 1024,
-        filename: 'filename'
-    });
-});
-
-const storage = new GridFsStorage({
-    url: process.env.MONGO_URL,
-    root: path.join(__dirname, 'image'),
-    options: { useNewUrlParser: true, useUnifiedTopology: true },
-    file: (req, file) => {
-        return { filename: file.originalname, bucketName: 'fs' };
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'public/assets');
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
     }
 });
 
 const upload = multer({ storage });
-
-app.get('/assets/:id', (req, res) => {
-    const imageId = req.params.id;
-    gfs
-      .find({ _id: mongoose.Types.ObjectId(imageId) })
-      .toArray((err, files) => {
-        if (!files || files.length === 0) {
-          return res.status(404).json({
-            message: 'No se encontró la imagen'
-          });
-        }
-        gfs.openDownloadStream(mongoose.Types.ObjectId(imageId)).pipe(res);
-      });
-  });
-
-  export default app;
 
 /* ROUTES WITH FILES */
 app.post('/auth/register', upload.single('picture'), register);

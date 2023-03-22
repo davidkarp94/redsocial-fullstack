@@ -56,19 +56,10 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
-  const getImage = async () => {
-    const response = await fetch(`https://vixbook-backend.onrender.com/assets/${picturePath}`, {
-      method: 'GET'
-    });
-    const image = await response.json();
-    console.log(image);
-  }
-
   useEffect(() => {
     const dateParsed = parseISO(date);
     const formatedDate = format(dateParsed, "MMM d',' yyyy' - 'HH:mm'hs.");
-    setDatePosted(formatedDate);
-    getImage();
+    setDatePosted(formatedDate)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
